@@ -27,12 +27,16 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         #region Player look
-        mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-        
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        transform.Rotate(Vector3.up * mouseX);
-        Camera.main.transform.localRotation *= Quaternion.Euler(Mathf.Clamp(-mouseY,-90f,90f), 0f, 0f);
+        // Update xRotation and clamp
+        xRotation -= mouseY; // Subtract mouseY to invert it for looking up/down
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        // Apply rotations
+        camera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Up/down rotation
+        transform.Rotate(Vector3.up * mouseX); // Left/right rotation
 
 
         #endregion
